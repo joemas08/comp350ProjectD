@@ -1,0 +1,10 @@
+# Ignore compiled binaries and object files
+*.o
+*.img
+*.jar
+
+# Ignore the following specific files
+bootload
+settings.txt
+test.img
+
