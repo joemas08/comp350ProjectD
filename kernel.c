@@ -8,33 +8,21 @@ void printChar(char);
 void readString(char*);
 void readSector(char*, int);
 void handleInterrupt21(int);
+void readFile(char*, char*, int*);
 
 void main() { 
 
     // Step 1
-    //printString("Hello World\0");
+    char buffer[13312];
+    int sectorsRead;
+    makeInterrupt21();
+    interrupt(0x21,3,"messag",buffer,&sectorsRead);
 
-    // Step 2
-    //char line[80];
-    //printString("Enter Line: \0");
-    //readString(line);
-    //printChar('\n');
-    //printString(line);
-
-    // Step 3
-    //char buffer[512];
-    //readSector(buffer, 30);
-    //printString(buffer);
-
-    // Step 4
-    //makeInterrupt21();
-    //interrupt(0x21,0,0,0,0);
-
-    // Step 5
-    //char line[80];
-    //makeInterrupt21();
-    //interrupt(0x21,1,line,0,0);
-    //interrupt(0x21,0,line,0,0);
+    if(sectorsRead>0) {
+        interrupt(0x21,0,buffer,0,0); 
+    } else {
+        interrupt(0x21,0,"messag not found\r\n",0,0);
+    }
 
     while(1);
 }
@@ -120,8 +108,37 @@ void handleInterrupt21(int ax, int bx, int cx, int dx) {
             readSector(bx, cx);
             break;
 
+        case 3:
+            readFile(bx,cx,dx);
+
         default:
             printString("Error!\0");
 
     }
 }
+
+void readFile(char* buffer, char* name, int* sectorsRead) {
+
+    char dir[512];
+    int fileEntry;
+    readSector(dir,2);
+
+
+    for(fileEntry = 0;fileEntry<512;fileEntry+=32){
+        if (dir[fileEntry] == name[0] && dir[fileEntry + 1] == name[1] && 
+            dir[fileEntry + 2] == name[2] && dir[fileEntry + 3] == name[3] && 
+            dir[fileEntry + 4] == name[4] && dir[fileEntry + 5] == name[5]) {
+
+            int check = 6;
+            while (dir[fileEntry + check] != 0) {
+
+                readSector(buffer, dir[fileEntry + check]);
+                buffer += 512;
+                *sectorsRead += 1;
+                check += 1;
+                
+            }
+        }
+    }
+}
+
