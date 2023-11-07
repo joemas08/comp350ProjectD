@@ -109,7 +109,8 @@ void handleInterrupt21(int ax, int bx, int cx, int dx) {
             break;
 
         case 3:
-            readFile(bx,cx,dx);
+            readFile(cx,bx,dx);
+            break;
 
         default:
             printString("Error!\0");
