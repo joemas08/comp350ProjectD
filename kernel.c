@@ -1,7 +1,7 @@
 // Joseph Masone
 // Natalio Gomes
 // COMP350-001
-// November 2, 2023
+// November 15, 2023
 
 void printString(char *);
 void printChar(char);
@@ -31,8 +31,12 @@ void main() {
   // interrupt(0x21, 4, "tstpr1", 0, 0);
 
   // Step 3
+  // makeInterrupt21();
+  // interrupt(0x21, 4, "tstpr2", 0, 0);
+
+  // Step 4
   makeInterrupt21();
-  interrupt(0x21, 4, "tstpr2", 0, 0);
+  interrupt(0x21, 4, "shell", 0, 0);
 
   while (1)
     ;
@@ -176,6 +180,13 @@ void executeProgram(char *name) {
 
 void terminate() {
 
-  while (1)
-    ;
+  char shellname[6];
+  shellname[0] = 's';
+  shellname[1] = 'h';
+  shellname[2] = 'e';
+  shellname[3] = 'l';
+  shellname[4] = 'l';
+  shellname[5] = '\0';
+
+  interrupt(0x21, 4, shellname, 0, 0);
 }
