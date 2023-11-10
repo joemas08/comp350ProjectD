@@ -10,6 +10,7 @@ void readSector(char *, int);
 void handleInterrupt21(int);
 void readFile(char *, char *, int *);
 void executeProgram(char *name);
+void terminate();
 
 void main() {
 
@@ -26,8 +27,12 @@ void main() {
   // }
 
   // Step 2
+  // makeInterrupt21();
+  // interrupt(0x21, 4, "tstpr1", 0, 0);
+
+  // Step 3
   makeInterrupt21();
-  interrupt(0x21, 4, "tstpr1", 0, 0);
+  interrupt(0x21, 4, "tstpr2", 0, 0);
 
   while (1)
     ;
@@ -119,6 +124,10 @@ void handleInterrupt21(int ax, int bx, int cx, int dx) {
     executeProgram(bx);
     break;
 
+  case 5:
+    terminate();
+    break;
+
   default:
     printString("Error!\0");
   }
@@ -163,4 +172,10 @@ void executeProgram(char *name) {
   }
 
   launchProgram(segment);
+}
+
+void terminate() {
+
+  while (1)
+    ;
 }
