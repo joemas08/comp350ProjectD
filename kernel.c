@@ -161,7 +161,7 @@ void readFile(char *name, char *buffer, int *sectorsRead) {
 }
 
 void executeProgram(char *name) {
-  char buffer[512];
+  char buffer[13312];
   int sectorsRead;
   int segment = 0x2000;
   int offset = 0;
@@ -169,7 +169,7 @@ void executeProgram(char *name) {
 
   readFile(name, buffer, &sectorsRead);
 
-  for (i = 0; i < 512; i++) {
+  for (i = 0; i < 13312; i++) {
 
     putInMemory(segment, offset, buffer[i]);
     offset++;
