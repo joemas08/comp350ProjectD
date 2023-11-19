@@ -7,6 +7,7 @@ void printString(char *);
 void printChar(char);
 void readString(char *);
 void readSector(char *, int);
+void writeSector(char *, int);
 void handleInterrupt21(int);
 void readFile(char *, char *, int *);
 void executeProgram(char *name);
@@ -106,6 +107,22 @@ void readSector(char *buffer, int sector) {
   interrupt(0x13, ax, bx, cx, dx);
 }
 
+void writeSector(char *buffer, int sector) {
+  int ah = 3;
+  int al = 1;
+  int ch = 0;
+  int cl = sector + 1;
+  int dh = 0;
+  int dl = 0x80;
+
+  int ax = ah * 256 + al;
+  int bx = buffer;
+  int cx = ch * 256 + cl;
+  int dx = dh * 256 + dl;
+
+  interrupt(0x13, ax, bx, cx, dx);
+}
+
 void handleInterrupt21(int ax, int bx, int cx, int dx) {
   switch (ax) {
   case 0:
@@ -130,6 +147,10 @@ void handleInterrupt21(int ax, int bx, int cx, int dx) {
 
   case 5:
     terminate();
+    break;
+
+  case 6:
+    writeSector(bx, cx);
     break;
 
   default:
