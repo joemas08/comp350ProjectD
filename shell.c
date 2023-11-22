@@ -5,7 +5,9 @@
 
 void type(char *fileName);
 void exec(char *filename);
+void dir();
 void clearLine();
+void printChar(char character);
 
 void main() {
 
@@ -44,6 +46,7 @@ void main() {
 
       exec(fileName);
 
+      // Small help menu for del command
     } else if (input[0] == 'd' && input[1] == 'e' && input[2] == 'l') {
       clearLine();
       syscall(0, "del is a command to delete a file\0");
@@ -51,6 +54,10 @@ void main() {
       syscall(0, "*del FILENAME* is the format for the del command\0");
       clearLine();
       syscall(0, "FILENAME must be 6 characters long\0");
+
+    } else if (input[0] == 'd' && input[1] == 'i' && input[2] == 'r') {
+      clearLine();
+      dir();
 
       // Small help menu for type command
     } else if (input[0] == 't' && input[1] == 'y' && input[2] == 'p' &&
@@ -115,6 +122,28 @@ void type(char *fileName) {
   } else {
     clearLine();
     syscall(0, buffer);
+  }
+}
+
+void dir() {
+
+  char buffer[512];
+  char filename[7];
+  int i = 0;
+  int fileEntry = 0;
+
+  syscall(2, buffer, 2);
+
+  for (fileEntry = 0; fileEntry < 512; fileEntry += 32) {
+    if (buffer[fileEntry] != '\0') {
+      for (i = 0; i < 6; i++) {
+        filename[i] = buffer[fileEntry + i];
+      }
+
+      filename[i] = '\0';
+      syscall(0, filename);
+      clearLine();
+    }
   }
 }
 
