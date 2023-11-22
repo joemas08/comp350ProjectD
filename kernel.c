@@ -10,6 +10,7 @@ void readSector(char *, int);
 void writeSector(char *, int);
 void handleInterrupt21(int);
 void readFile(char *, char *, int *);
+void deleteFile(char *);
 void executeProgram(char *name);
 void terminate();
 
@@ -153,6 +154,10 @@ void handleInterrupt21(int ax, int bx, int cx, int dx) {
     writeSector(bx, cx);
     break;
 
+  case 7:
+    deleteFile(bx);
+    break;
+
   default:
     printString("Error!\0");
   }
@@ -176,6 +181,32 @@ void readFile(char *name, char *buffer, int *sectorsRead) {
         buffer += 512;
         *sectorsRead += 1;
         check += 1;
+      }
+    }
+  }
+}
+
+void deleteFile(char *filename) {
+  char dir[512];
+  char map[512];
+  int fileEntry;
+  int check = 6;
+
+  readSector(dir, 2);
+  readSector(map, 3);
+
+  for (fileEntry = 0; fileEntry < 512; fileEntry += 32) {
+    if (dir[fileEntry] == filename[0] && dir[fileEntry + 1] == filename[1] &&
+        dir[fileEntry + 2] == filename[2] &&
+        dir[fileEntry + 3] == filename[3] &&
+        dir[fileEntry + 4] == filename[4] &&
+        dir[fileEntry + 5] == filename[5]) {
+
+      dir[fileEntry] = '\0';
+
+      while (dir[fileEntry + check] != 0) {
+
+        map[fileEntry + check] = '\0';
       }
     }
   }

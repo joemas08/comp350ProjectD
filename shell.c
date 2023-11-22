@@ -30,6 +30,8 @@ void main() {
       }
 
       type(fileName);
+
+      // Check for exec command
     } else if (input[0] == 'e' && input[1] == 'x' && input[2] == 'e' &&
                input[3] == 'c' && input[4] == ' ' && input[11] == '\r') {
 
@@ -41,6 +43,14 @@ void main() {
       }
 
       exec(fileName);
+
+    } else if (input[0] == 'd' && input[1] == 'e' && input[2] == 'l') {
+      clearLine();
+      syscall(0, "del is a command to delete a file\0");
+      clearLine();
+      syscall(0, "*del FILENAME* is the format for the del command\0");
+      clearLine();
+      syscall(0, "FILENAME must be 6 characters long\0");
 
       // Small help menu for type command
     } else if (input[0] == 't' && input[1] == 'y' && input[2] == 'p' &&
