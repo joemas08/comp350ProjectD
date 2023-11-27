@@ -1,10 +1,12 @@
 // Joseph Masone
 // Natalio Gomes
 // COMP350-001
-// November 15, 2023
+// November 27, 2023
 
 void type(char *fileName);
 void exec(char *filename);
+void copy(char *filename, char *newFilename);
+void create();
 void dir();
 void clearLine();
 void printChar(char character);
@@ -46,6 +48,33 @@ void main() {
 
       exec(fileName);
 
+      // Check for del command
+    } else if (input[0] == 'd' && input[1] == 'e' && input[2] == 'l' &&
+               input[10] == '\r') {
+
+      char fileName[6];
+      int i;
+
+      for (i = 0; i < 6; i++) {
+        fileName[i] = input[i + 5];
+      }
+
+      syscall(7, fileName);
+
+      // Check for create command
+    } else if (input[0] == 'c' && input[1] == 'r' && input[2] == 'e' &&
+               input[3] == 'a' && input[4] == 't' && input[5] == 'e' &&
+               input[6] == ' ' && input[13] == '\r') {
+
+      char fileName[6];
+      int i;
+
+      for (i = 0; i < 6; i++) {
+        fileName[i] = input[i + 5];
+      }
+
+      create();
+
       // Small help menu for del command
     } else if (input[0] == 'd' && input[1] == 'e' && input[2] == 'l') {
       clearLine();
@@ -79,6 +108,27 @@ void main() {
       clearLine();
       syscall(0, "FILENAME must be 6 characters long\0");
 
+      // Small help menu for copy command
+    } else if (input[0] == 'c' && input[1] == 'o' && input[2] == 'p' &&
+               input[3] == 'y') {
+      clearLine();
+      syscall(0, "copy is a command to copy a file\0");
+      clearLine();
+      syscall(
+          0,
+          "*copy FILENAME NEWFILENAME* is the format for the copy command\0");
+      clearLine();
+      syscall(0, "FILENAME and NEWFILENAME must be 6 characters long\0");
+
+      // Small help menu for create command
+    } else if (input[0] == 'c' && input[1] == 'r' && input[2] == 'e' &&
+               input[3] == 'a' && input[4] == 't' && input[5] == 'e') {
+      clearLine();
+      syscall(0, "create is a command to create a new file\0");
+      clearLine();
+      syscall(0, "*create FILENAME* is the format for the create command\0");
+      clearLine();
+      syscall(0, "FILENAME must be 6 characters long\0");
     } else {
 
       clearLine();
@@ -144,6 +194,21 @@ void dir() {
       syscall(0, filename);
       clearLine();
     }
+  }
+}
+
+void create() {
+  char buffer[100];
+  clearLine();
+  syscall(0, "Start Typing");
+  clearLine();
+
+  while (1) {
+    syscall(1, buffer);
+    if (buffer[0] == '\r') {
+      break;
+    }
+    clearLine();
   }
 }
 

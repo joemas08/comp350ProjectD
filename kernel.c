@@ -1,7 +1,7 @@
 // Joseph Masone
 // Natalio Gomes
 // COMP350-001
-// November 15, 2023
+// November 27, 2023
 
 void printString(char *);
 void printChar(char);
@@ -10,33 +10,13 @@ void readSector(char *, int);
 void writeSector(char *, int);
 void handleInterrupt21(int);
 void readFile(char *, char *, int *);
+void writeFile(char *, char *, int);
 void deleteFile(char *);
 void executeProgram(char *name);
 void terminate();
 
 void main() {
 
-  // Step 1
-  // char buffer[13312];
-  // int sectorsRead;
-  // makeInterrupt21();
-  // interrupt(0x21,3,"messag",buffer,&sectorsRead);
-
-  // if(sectorsRead>0) {
-  //     interrupt(0x21,0,buffer,0,0);
-  // } else {
-  //     interrupt(0x21,0,"messag not found\r\n",0,0);
-  // }
-
-  // Step 2
-  // makeInterrupt21();
-  // interrupt(0x21, 4, "tstpr1", 0, 0);
-
-  // Step 3
-  // makeInterrupt21();
-  // interrupt(0x21, 4, "tstpr2", 0, 0);
-
-  // Step 4
   makeInterrupt21();
   interrupt(0x21, 4, "shell", 0, 0);
 
@@ -158,6 +138,10 @@ void handleInterrupt21(int ax, int bx, int cx, int dx) {
     deleteFile(bx);
     break;
 
+  case 8:
+    writeFile(bx, cx, dx);
+    break;
+
   default:
     printString("Error!\0");
   }
@@ -186,6 +170,8 @@ void readFile(char *name, char *buffer, int *sectorsRead) {
   }
 }
 
+void writeFile(char *buffer, char *filename, int numberOfSectors) {}
+
 void deleteFile(char *filename) {
   char dir[512];
   char map[512];
@@ -196,6 +182,7 @@ void deleteFile(char *filename) {
   readSector(map, 3);
 
   for (fileEntry = 0; fileEntry < 512; fileEntry += 32) {
+
     if (dir[fileEntry] == filename[0] && dir[fileEntry + 1] == filename[1] &&
         dir[fileEntry + 2] == filename[2] &&
         dir[fileEntry + 3] == filename[3] &&
@@ -207,9 +194,13 @@ void deleteFile(char *filename) {
       while (dir[fileEntry + check] != 0) {
 
         map[fileEntry + check] = '\0';
+        check++;
       }
+      check = 6;
     }
   }
+  writeSector(dir, 2);
+  writeSector(map, 3);
 }
 
 void executeProgram(char *name) {
