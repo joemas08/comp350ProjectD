@@ -178,8 +178,8 @@ void deleteFile(char *filename) {
   int fileEntry;
   int check = 6;
 
+  readSector(map, 1);
   readSector(dir, 2);
-  readSector(map, 3);
 
   for (fileEntry = 0; fileEntry < 512; fileEntry += 32) {
 
@@ -193,14 +193,14 @@ void deleteFile(char *filename) {
 
       while (dir[fileEntry + check] != 0) {
 
-        map[fileEntry + check] = '\0';
+        map[dir[fileEntry + check]] = '\0';
         check++;
       }
       check = 6;
     }
   }
+  writeSector(map, 1);
   writeSector(dir, 2);
-  writeSector(map, 3);
 }
 
 void executeProgram(char *name) {

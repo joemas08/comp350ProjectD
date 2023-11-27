@@ -56,7 +56,7 @@ void main() {
       int i;
 
       for (i = 0; i < 6; i++) {
-        fileName[i] = input[i + 5];
+        fileName[i] = input[i + 4];
       }
 
       syscall(7, fileName);
