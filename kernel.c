@@ -14,10 +14,12 @@ void writeFile(char *, char *, int);
 void deleteFile(char *);
 void executeProgram(char *name);
 void terminate();
+int lengthOfString(char *str);
 
 void main() {
 
   makeInterrupt21();
+  interrupt(0x21, 8, "this is a test message", "testmg", 3);
   interrupt(0x21, 4, "shell", 0, 0);
 
   while (1)
@@ -170,11 +172,77 @@ void readFile(char *name, char *buffer, int *sectorsRead) {
   }
 }
 
-void writeFile(char *buffer, char *filename, int numberOfSectors) {}
+void writeFile(char *buffer, char *filename, int numberOfSectors) {
+  char map[512];
+  char dir[512];
+  char sector[512];
+  int fileEntry = 0;
+  int entryIndex = -1;
+  int sectorIndex = -1;
+  int nameLength;
+  int i;
+  int j;
+  int k;
+
+  readSector(map, 1);
+  readSector(dir, 2);
+
+  for (fileEntry = 0; fileEntry < 512; fileEntry += 32) {
+
+    if (dir[fileEntry] == '\0') {
+      entryIndex = fileEntry;
+      break;
+    }
+  }
+
+  if (entryIndex == -1) {
+    return;
+  }
+
+  nameLength = lengthOfString(filename);
+
+  for (i = 0; i < nameLength && i < 6; i++) {
+    dir[entryIndex + i] = filename[i];
+  }
+
+  for (i = nameLength; i < 6; i++) {
+    dir[entryIndex + i] = '\0';
+  }
+
+  for (i = 0; i < numberOfSectors; i++) {
+    for (j = 3; j < 256; j++) {
+      if (map[j] == '\0') {
+        sectorIndex = j;
+        break;
+      }
+    }
+
+    if (sectorIndex == -1) {
+      return;
+    }
+
+    map[sectorIndex] = 0xFF;
+
+    dir[entryIndex + 6 + i] = sectorIndex;
+
+    for (k = 0; k < 512; k++) {
+      sector[k] = buffer[i * 512 + k];
+    }
+
+    writeSector(sector, sectorIndex);
+  }
+
+  for (i = numberOfSectors; i < 16; i++) {
+    dir[entryIndex + 6 + i] = 0;
+  }
+
+  writeSector(map, 1);
+  writeSector(dir, 2);
+}
 
 void deleteFile(char *filename) {
-  char dir[512];
   char map[512];
+  char dir[512];
   int fileEntry;
   int check = 6;
 
@@ -219,6 +287,14 @@ void executeProgram(char *name) {
   }
 
   launchProgram(segment);
+}
+
+int lengthOfString(char *str) {
+  int length = 0;
+  while (str[length] != '\0') {
+    length++;
+  }
+  return length;
 }
 
 void terminate() {
