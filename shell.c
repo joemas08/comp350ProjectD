@@ -23,7 +23,7 @@ void main() {
 
     syscall(1, input);
 
-    // Check for type command
+    // Check for valid commands with correct args
     if (input[0] == 't' && input[1] == 'y' && input[2] == 'p' &&
         input[3] == 'e' && input[4] == ' ' && input[11] == '\r') {
 
@@ -35,7 +35,6 @@ void main() {
 
       type(fileName);
 
-      // Check for exec command
     } else if (input[0] == 'e' && input[1] == 'x' && input[2] == 'e' &&
                input[3] == 'c' && input[4] == ' ' && input[11] == '\r') {
 
@@ -48,7 +47,6 @@ void main() {
 
       exec(fileName);
 
-      // Check for del command
     } else if (input[0] == 'd' && input[1] == 'e' && input[2] == 'l' &&
                input[10] == '\r') {
 
@@ -61,7 +59,6 @@ void main() {
 
       syscall(7, fileName);
 
-      // Check for create command
     } else if (input[0] == 'c' && input[1] == 'r' && input[2] == 'e' &&
                input[3] == 'a' && input[4] == 't' && input[5] == 'e' &&
                input[6] == ' ' && input[13] == '\r') {
@@ -75,7 +72,22 @@ void main() {
 
       create();
 
-      // Small help menu for del command
+    } else if (input[0] == 'c' && input[1] == 'o' && input[2] == 'p' &&
+               input[3] == 'y' && input[4] == ' ' && input[11] == ' ' &&
+               input[18] == '\r') {
+
+      char fileName[6];
+      char newFileName[6];
+      int i = 0;
+
+      for (i = 0; i < 6; i++) {
+        fileName[i] = input[i + 5];
+        newFileName[i] = input[i + 12];
+      }
+
+      copy(fileName, newFileName);
+
+      // Small help menu for each command if typed on their own
     } else if (input[0] == 'd' && input[1] == 'e' && input[2] == 'l') {
       clearLine();
       syscall(0, "del is a command to delete a file\0");
@@ -88,7 +100,6 @@ void main() {
       clearLine();
       dir();
 
-      // Small help menu for type command
     } else if (input[0] == 't' && input[1] == 'y' && input[2] == 'p' &&
                input[3] == 'e') {
       clearLine();
@@ -98,7 +109,6 @@ void main() {
       clearLine();
       syscall(0, "FILENAME must be 6 characters long\0");
 
-      // Small help menu for exec command
     } else if (input[0] == 'e' && input[1] == 'x' && input[2] == 'e' &&
                input[3] == 'c') {
       clearLine();
@@ -108,7 +118,6 @@ void main() {
       clearLine();
       syscall(0, "FILENAME must be 6 characters long\0");
 
-      // Small help menu for copy command
     } else if (input[0] == 'c' && input[1] == 'o' && input[2] == 'p' &&
                input[3] == 'y') {
       clearLine();
@@ -120,7 +129,6 @@ void main() {
       clearLine();
       syscall(0, "FILENAME and NEWFILENAME must be 6 characters long\0");
 
-      // Small help menu for create command
     } else if (input[0] == 'c' && input[1] == 'r' && input[2] == 'e' &&
                input[3] == 'a' && input[4] == 't' && input[5] == 'e') {
       clearLine();
@@ -129,6 +137,23 @@ void main() {
       syscall(0, "*create FILENAME* is the format for the create command\0");
       clearLine();
       syscall(0, "FILENAME must be 6 characters long\0");
+
+    } else if (input[0] == 'h' && input[1] == 'e' && input[2] == 'l' &&
+               input[3] == 'p') {
+      clearLine();
+      syscall(0, "type:\t\t print out contents of a file\0");
+      clearLine();
+      syscall(0, "dir: \t\t list all files on the system\0");
+      clearLine();
+      syscall(0, "exec:\t\t execute a file\0");
+      clearLine();
+      syscall(0, "create: create a new file\0");
+      clearLine();
+      syscall(0, "copy:\t\t copy a file\0");
+      clearLine();
+      syscall(0, "del: \t\t delete a file\0");
+      clearLine();
+      syscall(0, "help:\t\t show commands for the system\0");
     } else {
 
       clearLine();
@@ -209,6 +234,22 @@ void create() {
       break;
     }
     clearLine();
+  }
+}
+
+void copy(char *filename, char *newFile) {
+  char buffer[512];
+  int sectorsRead = 0;
+
+  // Call readFile on the original file
+  syscall(3, filename, buffer, &sectorsRead);
+
+  if (sectorsRead == 0) {
+    clearLine();
+    syscall(0, "File not found!\0");
+  } else {
+    // Call writeFile with new file name
+    syscall(8, buffer, newFile, sectorsRead);
   }
 }
 
