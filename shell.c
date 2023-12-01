@@ -6,7 +6,7 @@
 void type(char *fileName);
 void exec(char *filename);
 void copy(char *filename, char *newFilename);
-void create();
+void create(char *filename);
 void dir();
 void clearLine();
 void printChar(char character);
@@ -67,10 +67,10 @@ void main() {
       int i;
 
       for (i = 0; i < 6; i++) {
-        fileName[i] = input[i + 5];
+        fileName[i] = input[i + 7];
       }
 
-      create();
+      create(fileName);
 
     } else if (input[0] == 'c' && input[1] == 'o' && input[2] == 'p' &&
                input[3] == 'y' && input[4] == ' ' && input[11] == ' ' &&
@@ -222,18 +222,22 @@ void dir() {
   }
 }
 
-void create() {
-  char buffer[100];
+void create(char *filename) {
+  char buffer[512];
+  int bytesRead = 0;
+
   clearLine();
-  syscall(0, "Start Typing");
+  syscall(0, "--Start Typing--");
   clearLine();
 
   while (1) {
-    syscall(1, buffer);
-    if (buffer[0] == '\r') {
+    bytesRead = syscall(1, buffer);
+    if (buffer[0] == '\r' && bytesRead < 2) {
       break;
     }
     clearLine();
+    bytesRead = 0;
+    syscall(8, buffer, filename, 1);
   }
 }
 

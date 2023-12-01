@@ -5,7 +5,7 @@
 
 void printString(char *);
 void printChar(char);
-void readString(char *);
+int readString(char *);
 void readSector(char *, int);
 void writeSector(char *, int);
 void handleInterrupt21(int);
@@ -43,7 +43,7 @@ void printChar(char c) {
   interrupt(0x10, ax, 0, 0, 0);
 }
 
-void readString(char *string) {
+int readString(char *string) {
 
   char ah = 0x0;
   int ax = 0;
@@ -72,6 +72,7 @@ void readString(char *string) {
       i++;
     }
   }
+  return i;
 }
 
 void readSector(char *buffer, int sector) {
