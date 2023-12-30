@@ -1,10 +1,12 @@
-<h1 align="center">
-  <strong>Operating System Project</strong>
-</h1>
-
-[![C](https://img.shields.io/badge/C-99-blue.svg)](https://en.wikipedia.org/wiki/C_(programming_language))
-[![Assembly](https://img.shields.io/badge/Assembly-x86-green.svg)](https://en.wikipedia.org/wiki/X86_assembly_language)
-[![Shell](https://img.shields.io/badge/Shell-bash-yellow.svg)](https://www.gnu.org/software/bash/)
+<div align="center">
+  <h1>Operating System Project</h1>
+  
+  [![C](https://img.shields.io/badge/C-99-blue.svg)](https://en.wikipedia.org/wiki/C_(programming_language))
+  [![Assembly](https://img.shields.io/badge/Assembly-x86-green.svg)](https://en.wikipedia.org/wiki/X86_assembly_language)
+  [![Shell](https://img.shields.io/badge/Shell-bash-yellow.svg)](https://www.gnu.org/software/bash/)
+  
+  Small operating system written in C and developed on Linux Mint
+</div>
 
 
 
