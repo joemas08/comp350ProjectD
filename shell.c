@@ -1,7 +1,5 @@
 // Joseph Masone
-// Natalio Gomes
 // COMP350-001
-// November 27, 2023
 
 void type(char *fileName);
 void exec(char *filename);
