@@ -11,7 +11,7 @@
 - [x] Step 3: Write function `deleteFile()`
 - [x] Step 4: Write the function `writeFile()`
 - [x] Step 5: Add `copy` command to the shell
-- [x] Step 6: Add `create` command to shello
+- [x] Step 6: Add `create` command to shell
 
 ## Features
 
