@@ -1,17 +1,14 @@
-<h1 align="center">Simple Operating System</h1>
+<h1 align="center">
+  <strong>Operating System Project</strong>
+</h1>
+
+[![C](https://img.shields.io/badge/C-99-blue.svg)](https://en.wikipedia.org/wiki/C_(programming_language))
+[![Assembly](https://img.shields.io/badge/Assembly-x86-green.svg)](https://en.wikipedia.org/wiki/X86_assembly_language)
+[![Shell](https://img.shields.io/badge/Shell-bash-yellow.svg)](https://www.gnu.org/software/bash/)
+
+
 
 ![Operating System Photo](/OS_Screenshot.png)
-
-## Steps
-
-### Steps Completed:
-
-- [x] Step 1: Write the function `writeSector()`
-- [x] Step 2: Add `dir` command to the shell
-- [x] Step 3: Write function `deleteFile()`
-- [x] Step 4: Write the function `writeFile()`
-- [x] Step 5: Add `copy` command to the shell
-- [x] Step 6: Add `create` command to shell
 
 ## Features
 
@@ -39,10 +36,6 @@
 
 - Lists all files on the system.
 - **Usage:** `dir`
-
-### Clear Line Function
-
-- Clears the console line.
 
 ### Print Character Function
 
